@@ -42,7 +42,7 @@ const int FRAME_HEIGHT = 480;
 //max number of objects to be detected in frame
 const int MAX_NUM_OBJECTS = 50;
 //minimum and maximum object area
-const int MIN_OBJECT_AREA = 40 * 40;
+const int MIN_OBJECT_AREA = 20 * 20;
 const int MAX_OBJECT_AREA = FRAME_HEIGHT * FRAME_WIDTH / 1.5;
 //names that will appear at the top of each window
 const string windowName = "depth";
@@ -50,24 +50,13 @@ const string windowName2 = "Thresholded Image";
 const string windowName3 = "After Morphological Operations";
 const string trackbarWindowName = "Trackbars";
 
-
-
-
-
 //This function gets called whenever atrackbar position is changed
 void on_trackbar(int, void*)
 {
-
-
-
-
-
 }
 
 // Helper funktion to count
 string intToString(int number) {
-
-
 	std::stringstream ss;
 	ss << number;
 	return ss.str();
@@ -75,9 +64,6 @@ string intToString(int number) {
 
 //Create sliders to afjuste de values
 void createTrackbars() {
-	//create window for trackbars
-
-
 	namedWindow(trackbarWindowName, 0);
 	//create memory to store trackbar name on window
 	char TrackbarName[50];
@@ -87,19 +73,13 @@ void createTrackbars() {
 	sprintf(TrackbarName, "S_MAX", S_MAX);
 	sprintf(TrackbarName, "V_MIN", V_MIN);
 	sprintf(TrackbarName, "V_MAX", V_MAX);
-	//create trackbars and insert them into window
-	//3 parameters are: the address of the variable that is changing when the trackbar is moved(eg.H_LOW),
-	//the max value the trackbar can move (eg. H_HIGH), 
-	//and the function that is called whenever the trackbar is moved(eg. on_trackbar)
-	//                                  ---->    ---->     ---->      
+     
 	createTrackbar("H_MIN", trackbarWindowName, &H_MIN, H_MAX, on_trackbar);
 	createTrackbar("H_MAX", trackbarWindowName, &H_MAX, H_MAX, on_trackbar);
 	createTrackbar("S_MIN", trackbarWindowName, &S_MIN, S_MAX, on_trackbar);
 	createTrackbar("S_MAX", trackbarWindowName, &S_MAX, S_MAX, on_trackbar);
 	createTrackbar("V_MIN", trackbarWindowName, &V_MIN, V_MAX, on_trackbar);
 	createTrackbar("V_MAX", trackbarWindowName, &V_MAX, V_MAX, on_trackbar);
-
-
 }
 
 //Display names and center
@@ -115,20 +95,16 @@ void drawObject(vector<Obstacle> theObjects, Mat &frame) {
 
 // deletenoise and fill holes
 void morphOps(Mat &thresh) {
-
-
+	
 	Mat erodeElement = getStructuringElement(MORPH_RECT, Size(3, 3));
 	//dilate with larger element so make sure object is nicely visible
 	Mat dilateElement = getStructuringElement(MORPH_RECT, Size(8, 8));
 
 	erode(thresh, thresh, erodeElement);
 	erode(thresh, thresh, erodeElement);
-
-
+	
 	dilate(thresh, thresh, dilateElement);
 	dilate(thresh, thresh, dilateElement);
-
-
 
 }
 
@@ -170,13 +146,10 @@ void trackFilteredObject(Mat threshold, Mat &cameraFeed) {
 
 					close.push_back(close1);
 
-
-
 					objectFound = true;
 
 				}
 				else objectFound = false;
-
 
 			}
 			//let user know you found an object
@@ -217,7 +190,6 @@ void trackFilteredObject(Obstacle theObject, Mat threshold, Mat &cameraFeed) {
 				//we only want the object with the largest area so we safe a reference area each
 				//iteration and compare it to the area in the next iteration.
 				if (area>MIN_OBJECT_AREA) {
-
 					Obstacle close1;
 
 					close1.setxPos(moment.m10 / area);
@@ -226,14 +198,10 @@ void trackFilteredObject(Obstacle theObject, Mat threshold, Mat &cameraFeed) {
 					close1.setColor(theObject.getColor());
 
 					close.push_back(close1);
-
-
-
 					objectFound = true;
 
 				}
 				else objectFound = false;
-
 
 			}
 			//let user know you found an object
@@ -248,8 +216,7 @@ void trackFilteredObject(Obstacle theObject, Mat threshold, Mat &cameraFeed) {
 }
 
 int main() {
-
-	//set modes:
+	//set modes:s
 	bool trackObjects = true;
 	bool useMorphOps = true;
 	bool calibrationMode = false;
@@ -279,8 +246,8 @@ int main() {
 
 	while (1) // inf. loop
 	{
-		rs2::frameset data = pipe.wait_for_frames(); // Wait for next set of frames from the camera
-		rs2::frame depth = color_map(data.get_depth_frame()); // Find and colorize the depth data
+		frameset data = pipe.wait_for_frames(); // Wait for next set of frames from the camera
+		frame depth = color_map(data.get_depth_frame()); // Find and colorize the depth data
 
 															  // Convert RealSense frame to OpenCV matrix:
 		auto depth_mat = frame_to_mat(depth);
@@ -324,7 +291,9 @@ int main() {
 		}
 
 		//show frames 
-		/*imshow(windowName2, threshold);*/
+		if (calibrationMode) {
+			imshow(windowName2, threshold);
+		}
 		imshow(windowName, depth_mat);
 
 
@@ -335,3 +304,12 @@ int main() {
 	}
 	return 0;
 }
+//////
+//testtestetsetset
+//estfdiuopsfüa<hfiopds<fui
+//	sedgf
+//	dsag
+//	sdagä
+//	sdg
+//	sadg
+//	aä
