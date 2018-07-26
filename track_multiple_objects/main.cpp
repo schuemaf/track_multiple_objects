@@ -85,7 +85,7 @@ void createTrackbars() {
 	createTrackbar("V_MAX", trackbarWindowName, &V_MAX, V_MAX, on_trackbar);
 }
 
-//Display names and center
+//1Display names and center
 void drawObject(vector<Obstacle> theObjects, Mat &frame) {
 
 	Obstacle close("close");
