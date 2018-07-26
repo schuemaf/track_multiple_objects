@@ -11,14 +11,14 @@ Obstacle::Obstacle(string name) {
 
 	if (name == "close") {
 		//Set values fro close objects
-		setHSVmin(Scalar(42, 0, 0));
-		setHSVmax(Scalar(256, 186, 119));
+		setHSVmin(Scalar(9, 0, 0));
+		setHSVmax(Scalar(256, 117, 116));
 		setColor(Scalar(0, 255, 0));
 	}
 	if (name == "mid") {
 		//Set values fro close objects
-		setHSVmin(Scalar(7, 202, 0));
-		setHSVmax(Scalar(256, 256, 193));
+		setHSVmin(Scalar(0, 28, 0));
+		setHSVmax(Scalar(9, 256, 256));
 		setColor(Scalar(0, 0, 255));
 	}
 

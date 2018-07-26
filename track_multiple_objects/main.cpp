@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <windows.h>
 
 // OpenGL
 #include <GL/glew.h>
@@ -35,8 +36,8 @@ int S_MIN = 0;
 int S_MAX = 256;
 int V_MIN = 0;
 int V_MAX = 256;
-int leftBoarder = 300;
-int rightBoarder = 900;
+int leftBoarder = 560;
+int rightBoarder = 860;
 
 //default capture width and height
 const int FRAME_WIDTH = 640;
@@ -87,6 +88,8 @@ void createTrackbars() {
 //Display names and center
 void drawObject(vector<Obstacle> theObjects, Mat &frame) {
 
+	Obstacle close("close");
+
 	for (int i = 0; i < theObjects.size(); i++)
 	{
 		cv::circle(frame, Point(theObjects.at(i).getxPos(), theObjects.at(i).getyPos()), 10, cv::Scalar(0, 0, 255));
@@ -98,6 +101,7 @@ void drawObject(vector<Obstacle> theObjects, Mat &frame) {
 		if (theObjects.at(i).getxPos() >leftBoarder && (theObjects.at(i).getxPos()) < rightBoarder) {
 
 			cout << "move " << theObjects.at(i).getxPos() << endl;
+			Beep(523, 500);
 		}
 	}
 }
@@ -242,7 +246,7 @@ int main() {
 	//set modes:s
 	bool trackObjects = true;
 	bool useMorphOps = true;
-	bool calibrationMode = false;
+	bool calibrationMode = true;
 	vector<Obstacle> test;
 
 	//matrix storage for binary threshold image
@@ -315,7 +319,7 @@ int main() {
 		}
 
 		// Draw rectangangle 
-		rectangle(depth_mat, Point(340, 0), Point(940, 720), Scalar(255), 5, 8, 0);
+		rectangle(depth_mat, Point(560, 0), Point(860, 720), Scalar(255), 5, 8, 0);
 
 		//show frames 
 		if (calibrationMode) {
