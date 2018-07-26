@@ -304,12 +304,3 @@ int main() {
 	}
 	return 0;
 }
-//////
-//testtestetsetset
-//estfdiuopsfüa<hfiopds<fui
-//	sedgf
-//	dsag
-//	sdagä
-//	sdg
-//	sadg
-//	aä
