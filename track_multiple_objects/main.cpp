@@ -88,7 +88,6 @@ void createTrackbars() {
 //1Display names and center
 void drawObject(vector<Obstacle> theObjects, Mat &frame) {
 
-	Obstacle close("close");
 
 	for (int i = 0; i < theObjects.size(); i++)
 	{
@@ -97,25 +96,22 @@ void drawObject(vector<Obstacle> theObjects, Mat &frame) {
 		cv::putText(frame, theObjects.at(i).getType(), cv::Point(theObjects.at(i).getxPos(), theObjects.at(i).getyPos() - 30), 1, 4, theObjects.at(i).getColor());
 		
 		
-		cout << theObjects.at(i).getxPos() << endl;
+		
+		
+	}
+}
+void calculateWay(vector<Obstacle>theObjects) {
+	for (int i = 0; i < theObjects.size(); i++) {
+
 		if (theObjects.at(i).getxPos() >leftBoarder && (theObjects.at(i).getxPos()) < rightBoarder) {
 
 			cout << "move " << theObjects.at(i).getxPos() << endl;
 			Beep(523, 500);
 		}
+
 	}
+
 }
-//void calculateWay(vector<Obstacle>theObjects) {
-//	for (int i = 0; i < theObjects.size(); i++) {
-//		
-//		if (theObjects.at(i).getxPos() >leftBoarder && (theObjects.at(i).getxPos()) < rightBoarder) {
-//
-//			cout<<"move "<<theObjects.at(i).getxPos() << endl;
-//		}
-//		
-//	}
-//
-//}
 
 
 
@@ -171,6 +167,7 @@ void trackFilteredObject(Mat threshold, Mat &cameraFeed) {
 					close1.setyPos(moment.m01 / area);
 
 					close.push_back(close1);
+					
 
 					objectFound = true;
 
@@ -183,13 +180,14 @@ void trackFilteredObject(Mat threshold, Mat &cameraFeed) {
 				//draw object location on screen
 				drawObject(close, cameraFeed);
 				
+				
 			}
 
 		}
 		else putText(cameraFeed, "TOO MUCH NOISE! ADJUST FILTER", Point(0, 50), 1, 2, Scalar(0, 0, 255), 2);
 	}
 }
-void trackFilteredObject(Obstacle theObject, Mat threshold, Mat &cameraFeed) {
+void trackFilteredObject(Obstacle theObject, Mat threshold, Mat &cameraFeed, int var) {
 
 	vector<Obstacle> close;
 
@@ -235,6 +233,9 @@ void trackFilteredObject(Obstacle theObject, Mat threshold, Mat &cameraFeed) {
 			if (objectFound == true) {
 				//draw object location on screen
 				drawObject(close, cameraFeed);
+				if (var == 1) {
+					calculateWay(close);
+				}
 			}
 
 		}
@@ -303,19 +304,21 @@ int main() {
 
 
 			//near objects
+			int s = 1;
 			inRange(depth_mat, close.getHSVmin(), close.getHSVmax(), threshold);
 			morphOps(threshold);
-			trackFilteredObject(close, threshold, depth_mat);
+			trackFilteredObject(close, threshold, depth_mat,1);
+			s = 0;
 
 			// mid objects
 			inRange(depth_mat, mid.getHSVmin(), mid.getHSVmax(), threshold);
 			morphOps(threshold);
-			trackFilteredObject(mid, threshold, depth_mat);
+			trackFilteredObject(mid, threshold, depth_mat,0);
 
 			//far objects
 			inRange(depth_mat, away.getHSVmin(), away.getHSVmax(), threshold);
 			morphOps(threshold);
-			trackFilteredObject(away, threshold, depth_mat);
+			trackFilteredObject(away, threshold, depth_mat,0);
 		}
 
 		// Draw rectangangle 
