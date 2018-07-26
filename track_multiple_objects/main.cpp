@@ -35,6 +35,8 @@ int S_MIN = 0;
 int S_MAX = 256;
 int V_MIN = 0;
 int V_MAX = 256;
+int leftBoarder = 300;
+int rightBoarder = 900;
 
 //default capture width and height
 const int FRAME_WIDTH = 640;
@@ -87,11 +89,31 @@ void drawObject(vector<Obstacle> theObjects, Mat &frame) {
 
 	for (int i = 0; i < theObjects.size(); i++)
 	{
-		cv::circle(frame, cv::Point(theObjects.at(i).getxPos(), theObjects.at(i).getyPos()), 10, cv::Scalar(0, 0, 255));
+		cv::circle(frame, Point(theObjects.at(i).getxPos(), theObjects.at(i).getyPos()), 10, cv::Scalar(0, 0, 255));
 		cv::putText(frame, intToString(theObjects.at(i).getxPos()) + " , " + intToString(theObjects.at(i).getyPos()), cv::Point(theObjects.at(i).getxPos(), theObjects.at(i).getyPos() + 20), 1, 1, Scalar(0, 255, 0));
 		cv::putText(frame, theObjects.at(i).getType(), cv::Point(theObjects.at(i).getxPos(), theObjects.at(i).getyPos() - 30), 1, 4, theObjects.at(i).getColor());
+		
+		
+		cout << theObjects.at(i).getxPos() << endl;
+		if (theObjects.at(i).getxPos() >leftBoarder && (theObjects.at(i).getxPos()) < rightBoarder) {
+
+			cout << "move " << theObjects.at(i).getxPos() << endl;
+		}
 	}
 }
+//void calculateWay(vector<Obstacle>theObjects) {
+//	for (int i = 0; i < theObjects.size(); i++) {
+//		
+//		if (theObjects.at(i).getxPos() >leftBoarder && (theObjects.at(i).getxPos()) < rightBoarder) {
+//
+//			cout<<"move "<<theObjects.at(i).getxPos() << endl;
+//		}
+//		
+//	}
+//
+//}
+
+
 
 // deletenoise and fill holes
 void morphOps(Mat &thresh) {
@@ -156,6 +178,7 @@ void trackFilteredObject(Mat threshold, Mat &cameraFeed) {
 			if (objectFound == true) {
 				//draw object location on screen
 				drawObject(close, cameraFeed);
+				
 			}
 
 		}
@@ -220,6 +243,7 @@ int main() {
 	bool trackObjects = true;
 	bool useMorphOps = true;
 	bool calibrationMode = false;
+	vector<Obstacle> test;
 
 	//matrix storage for binary threshold image
 	Mat threshold;
@@ -290,12 +314,16 @@ int main() {
 			trackFilteredObject(away, threshold, depth_mat);
 		}
 
+		// Draw rectangangle 
+		rectangle(depth_mat, Point(340, 0), Point(940, 720), Scalar(255), 5, 8, 0);
+
 		//show frames 
 		if (calibrationMode) {
 			imshow(windowName2, threshold);
 		}
 		imshow(windowName, depth_mat);
-
+		/*calculateWay(test);*/
+		
 
 
 		//delay 30ms so that screen can refresh
