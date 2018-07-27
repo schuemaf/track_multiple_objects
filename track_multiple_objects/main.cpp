@@ -5,6 +5,7 @@
 #include <vector>
 #include <windows.h>
 
+
 // OpenGL
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -36,8 +37,7 @@ int S_MIN = 0;
 int S_MAX = 256;
 int V_MIN = 0;
 int V_MAX = 256;
-int leftBoarder = 560;
-int rightBoarder = 860;
+
 
 //default capture width and height
 const int FRAME_WIDTH = 640;
@@ -100,18 +100,71 @@ void drawObject(vector<Obstacle> theObjects, Mat &frame) {
 		
 	}
 }
+//Calculate the best way if something is in the fild of obstraction
 void calculateWay(vector<Obstacle>theObjects) {
+
+	int leftBoarder = 560;
+	int rightBoarder = 860;
+	int foundObject = 0;
+	int direction = 0; // 1 = left, 2= right, 3= back
+	
+
+	//Looking for objects in the fild of obstraction
 	for (int i = 0; i < theObjects.size(); i++) {
 
-		if (theObjects.at(i).getxPos() >leftBoarder && (theObjects.at(i).getxPos()) < rightBoarder) {
+		if (theObjects.at(i).getxPos() > leftBoarder && (theObjects.at(i).getxPos()) < rightBoarder) {
 
-			cout << "move " << theObjects.at(i).getxPos() << endl;
-			Beep(523, 500);
+			/*cout << "move " << theObjects.at(i).getxPos() << endl;*/
+			
+			foundObject = 1;
+			
 		}
+		direction = 0;
 
+
+		if (foundObject == 1) {
+
+			//looking for objects in the left field
+			if (!(theObjects.at(i).getxPos() > 0 && (theObjects.at(i).getxPos()) < leftBoarder)) {
+				direction = 1;
+				}
+
+			//looking for objects in the right field
+			if (!(theObjects.at(i).getxPos() > rightBoarder && (theObjects.at(i).getxPos()) < 1280)) {
+				if (direction == 1) {
+					direction = 3;
+				}
+				else
+				{
+					direction = 2;
+				}
+				
+				}
+
+			switch (direction) {
+			case 1:
+				cout << "move left " << theObjects.at(i).getxPos() << endl;
+				break;
+
+			case 2:
+				cout << "move right " << theObjects.at(i).getxPos() << endl;
+				break;
+			case 3:
+				cout << "move back " << theObjects.at(i).getxPos() << endl;
+				break;
+
+			default:
+				cout << "move back " << theObjects.at(i).getxPos() << endl;
+
+			}
+
+		}
+		foundObject = 0;
+		
 	}
-
+	
 }
+
 
 
 
@@ -187,6 +240,7 @@ void trackFilteredObject(Mat threshold, Mat &cameraFeed) {
 		else putText(cameraFeed, "TOO MUCH NOISE! ADJUST FILTER", Point(0, 50), 1, 2, Scalar(0, 0, 255), 2);
 	}
 }
+
 void trackFilteredObject(Obstacle theObject, Mat threshold, Mat &cameraFeed, int var) {
 
 	vector<Obstacle> close;
@@ -247,7 +301,7 @@ int main() {
 	//set modes:s
 	bool trackObjects = true;
 	bool useMorphOps = true;
-	bool calibrationMode = true;
+	bool calibrationMode = false;
 	vector<Obstacle> test;
 
 	//matrix storage for binary threshold image
