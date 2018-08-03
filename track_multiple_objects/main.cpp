@@ -106,7 +106,8 @@ void calculateWay(vector<Obstacle>theObjects) {
 	int leftBoarder = 560;
 	int rightBoarder = 860;
 	int foundObject = 0;
-	int direction = 0; // 1 = left, 2= right, 3= back
+	int direction = 0; // 1 = left, 2= right, 3= manual mode
+	int k = 0;
 	
 
 	//Looking for objects in the fild of obstraction
@@ -115,54 +116,53 @@ void calculateWay(vector<Obstacle>theObjects) {
 		if (theObjects.at(i).getxPos() > leftBoarder && (theObjects.at(i).getxPos()) < rightBoarder) {
 
 			/*cout << "move " << theObjects.at(i).getxPos() << endl;*/
-			
+
 			foundObject = 1;
-			
+
 		}
 		direction = 0;
+	}
 
 
-		if (foundObject == 1) {
+	if (foundObject == 1 ) {
+		
+		while (k < theObjects.size() && (!(direction==3))){
 
 			//looking for objects in the left field
-			if (!(theObjects.at(i).getxPos() > 0 && (theObjects.at(i).getxPos()) < leftBoarder)) {
+			if (((theObjects.at(k).getxPos()) < leftBoarder)) {
 				direction = 1;
-				}
+			}
 
 			//looking for objects in the right field
-			if (!(theObjects.at(i).getxPos() > rightBoarder && (theObjects.at(i).getxPos()) < 1280)) {
+			if ((theObjects.at(k).getxPos() > rightBoarder)) {
 				if (direction == 1) {
 					direction = 3;
+				
 				}
 				else
 				{
 					direction = 2;
 				}
-				
-				}
-
-			switch (direction) {
-			case 1:
-				cout << "move left " << theObjects.at(i).getxPos() << endl;
-				break;
-
-			case 2:
-				cout << "move right " << theObjects.at(i).getxPos() << endl;
-				break;
-			case 3:
-				cout << "move back " << theObjects.at(i).getxPos() << endl;
-				break;
-
-			default:
-				cout << "move back " << theObjects.at(i).getxPos() << endl;
-
 			}
-
+			k++;
 		}
 		foundObject = 0;
-		
 	}
-	
+	switch (direction) {
+	case 1:
+		cout << "move right " << endl;
+		break;
+	case 2:
+		cout << "move left " << endl;
+		break;
+	case 3:
+		cout << "manual mode" << endl;
+		break;
+
+	default:
+		cout << "default " << endl;
+		break;
+	}
 }
 
 
